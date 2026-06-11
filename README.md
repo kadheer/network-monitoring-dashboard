@@ -11,3 +11,6 @@ I needed a quick way to see if our office network drops packets to Google DNS or
 ## wie kann man es ausfuhren?
 pip install -r requirements.txt
 python app.py
+
+## zum schluss:
+Open the http://localhost:5000
