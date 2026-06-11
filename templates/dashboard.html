@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Network Monitor</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <meta http-equiv="refresh" content="30">
+</head>
+<body>
+    <h1>Network Status Dashboard</h1>
+    <div id="metrics"></div>
+    <script>
+        async function fetchMetrics() {
+            const response = await fetch('/api/metrics');
+            const data = await response.json();
+            let html = '';
+            for (let item of data) {
+                html += `<div class="card">
+                    <h3>${item.target}</h3>
+                    <p>Latency: ${item.latency_ms !== null ? item.latency_ms + ' ms' : 'timeout'}</p>
+                    <p>Packet loss: ${item.packet_loss_percent}%</p>
+                    <details>
+                        <summary>Route (first 5 hops)</summary>
+                        <ul>`;
+                for (let hop of item.route) {
+                    html += `<li>Hop ${hop.hop}: ${hop.ip}</li>`;
+                }
+                html += `</ul></details>
+                </div>`;
+            }
+            document.getElementById('metrics').innerHTML = html;
+        }
+        fetchMetrics();
+        setInterval(fetchMetrics, 30000);
+    </script>
+</body>
+</html>
